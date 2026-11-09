@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CrownEarn</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f4f1ff;--card:#fff;--ink:#241b4b;--mute:#6f6a8f;--pri:#6a4cf5;--pd:#4b33c4;--gold:#ffc83d;--gd:#d99a00;--mint:#16b980;--line:#e6e0fb;--soft:#efeaff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14102b;--card:#1e1940;--ink:#f0edff;--mute:#a9a3cf;--line:#2e2860;--soft:#2a2358}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.5}
+main{max-width:520px;margin:0 auto;padding:14px 16px 110px}
+.hd{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:22px;line-height:1.5}
+.sec{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:19px;margin:22px 2px 0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.chip{background:var(--card);border:2px solid var(--gold);border-radius:99px;padding:2px 14px;font-weight:700;white-space:nowrap}
+.hero{background:linear-gradient(150deg,#8a63ff,#5a3be0);color:#fff;border-radius:28px;padding:20px;margin-top:12px;box-shadow:0 8px 0 #4129b0,0 18px 30px rgba(74,50,190,.3)}
+.hr{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hero small{opacity:.9;font-size:14px}
+.big{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:46px;line-height:1.1}
+.mas{flex:none;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){.mas{animation:none}}
+.bub{background:rgba(255,255,255,.18);border-radius:16px;padding:8px 14px;margin-top:14px;font-size:15px}
+.pb{height:16px;border-radius:99px;background:rgba(255,255,255,.25);margin-top:12px;overflow:hidden}
+.pb i{display:block;height:100%;border-radius:99px;background:linear-gradient(180deg,#ffe07a,#ffc83d);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);transition:width .8s}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;margin-top:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gr{display:flex;align-items:center;gap:12px}
+.days{display:flex;justify-content:space-between;margin:12px 0}
+.days b{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--mute);font-size:14px}
+.days b.d{background:var(--gold);color:#4a3200}
+.days b.t{border:3px dashed var(--pri);color:var(--pri);background:var(--card)}
+.ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;flex:none}
+.c0{background:#d9f5e8}.c1{background:#fff0c4}.c2{background:#dfe8ff}.c3{background:#ffe0e6}
+.rw{display:inline-block;background:#fff0c4;color:#7a5200;font-weight:700;font-size:13px;border-radius:99px;padding:1px 12px}
+.tag{font-size:13px;padding:2px 10px;border-radius:99px;background:var(--soft);color:var(--pri);font-weight:700;white-space:nowrap}
+.mute{color:var(--mute);font-size:14px}
+button{font:inherit;font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;border:0;border-bottom:4px solid var(--pd);border-radius:14px;padding:6px 18px;background:var(--pri);color:#fff;cursor:pointer}
+button:active{transform:translateY(2px);border-bottom-width:2px}
+button.g{background:var(--gold);color:#4a3200;border-color:var(--gd)}
+button.o{background:var(--soft);color:var(--pri);border-color:var(--line)}
+button.w{width:100%;padding:10px;font-size:18px}
+button:disabled{opacity:.45}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.bd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center;font-size:13px;line-height:1.4}
+.bd div{opacity:.35;filter:grayscale(1)}
+.bd div.on{opacity:1;filter:none}
+.bd span{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 4px;border-radius:50%;background:var(--soft);font-size:26px}
+.wc{background:linear-gradient(150deg,#16b980,#0a7d57);color:#fff;border-radius:28px;padding:22px;box-shadow:0 8px 0 #07583e,0 18px 30px rgba(7,88,62,.3)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;text-align:center}
+.grid3 .card{margin:0}.grid3 b{display:block;font-size:24px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{display:flex;gap:4px;background:var(--card);border:2px solid var(--line);border-radius:99px;padding:6px;box-shadow:0 10px 30px rgba(36,27,75,.2);width:100%;max-width:420px}
+nav button{flex:1;background:none;color:var(--mute);border:0;padding:4px;font-size:14px;border-radius:99px}
+nav button.on{background:var(--pri);color:#fff}
+nav span{display:block;font-size:20px;line-height:1.3}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:14px;font-size:15px;z-index:60;max-width:92%;text-align:center}
+.ov{position:fixed;inset:0;background:rgba(20,10,60,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.ov.mid{align-items:center;padding:20px}
+.sh{background:var(--card);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+.win{background:var(--card);border-radius:28px;padding:22px;text-align:center;width:100%;max-width:340px}
+.ms{display:flex;gap:8px;margin:10px 0}
+.ms button{flex:1;background:var(--soft);color:var(--ink);border:2px solid transparent}
+.ms button.on{border-color:var(--gold)}
+input{width:100%;font:inherit;font-size:18px;padding:11px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-align:left;direction:ltr}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.cf i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{top:105%;opacity:.5}}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.qa button{display:block;padding:8px 4px;font-size:14px;line-height:1.5}
+.qa span{display:block;font-size:24px}
+.tp{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.tp button{background:var(--soft);color:var(--ink);border:2px solid transparent;padding:2px 14px;font-size:14px}
+.tp button.on{border-color:var(--pri);color:var(--pri)}
+label{display:block;font-weight:700;margin:12px 0 4px}
+.sum{background:var(--soft);border-radius:16px;padding:12px;margin-top:12px;font-size:15px}
+.warn{background:#fff3cd;color:#6b4a00;border-radius:14px;padding:8px 12px;font-size:13px;margin-top:8px}
+.mc{background:linear-gradient(150deg,#8a63ff,#5a3be0);color:#fff;border-radius:28px;padding:20px;margin-top:14px;box-shadow:0 8px 0 #4129b0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rt{text-align:right;direction:rtl}
+nav button{font-size:13px}
+a.bt{display:inline-block;text-decoration:none;font-weight:700;border-radius:14px;padding:6px 14px;background:var(--soft);color:var(--pri);font-size:14px}
+.sh{max-height:90vh;overflow:auto}
+</style>
+</head>
+<body>
+<main id="app"><div class="card">Loading…</div></main>
+<div id="sheet"></div>
+<nav id="nav"></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+const SB_URL='https://moumogjmoawzxgdpilyl.supabase.co',SB_KEY='sb_publishable_qkWWMMgwtQV9SqvY3FcBKw_MsaNjdTt';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const REF=(new URLSearchParams(location.search).get('ref')||(()=>{try{return localStorage.getItem('ref')}catch(e){return ''}})()||'').slice(0,12);
+try{if(REF)localStorage.setItem('ref',REF)}catch(e){}
+let U=null,P=null,D={cfg:{},refs:[]},tab='home',M='JazzCash',T='App install',mode=REF?'signup':'login',shown=0;
+const rate=()=>+(D.cfg.pkr_per_point??0.01),rs=p=>Math.round(p*rate()),MINW=()=>D.cfg.min_withdraw_points||1000;
+const ICON={'App install':'📲','Sign up':'📝','Survey':'📋','Other':'⭐'};
+const KIND={daily_bonus:'Daily bonus',task_reward:'Task reward',deposit:'Deposit',withdraw_request:'Withdrawal',withdraw_refund:'Withdrawal refund',task_created:'Task created',task_refund:'Task refund',referral:'Friend commission',referral_bonus:'Friend bonus'};
+const mascot=s=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100" class="mas" aria-hidden="true"><circle cx="50" cy="50" r="44" fill="#ffc83d" stroke="#d99a00" stroke-width="6"/><circle cx="50" cy="50" r="33" fill="#ffd96b"/><circle cx="38" cy="45" r="5" fill="#4a3200"/><circle cx="62" cy="45" r="5" fill="#4a3200"/><circle cx="39.5" cy="43.5" r="1.8" fill="#fff"/><circle cx="63.5" cy="43.5" r="1.8" fill="#fff"/><ellipse cx="29" cy="58" rx="6" ry="4" fill="#ff8f8f" opacity=".6"/><ellipse cx="71" cy="58" rx="6" ry="4" fill="#ff8f8f" opacity=".6"/><path d="M40 58Q50 70 60 58" stroke="#4a3200" stroke-width="4" fill="none" stroke-linecap="round"/></svg>`;
+function toast(m){const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),3200)}
+function boom(){if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;const c=document.createElement('div');c.className='cf';for(let i=0;i<44;i++){const s=document.createElement('i');s.style.cssText=`left:${Math.random()*100}%;background:${['#ffc83d','#6a4cf5','#16b980','#ff6b8b','#4dabf7'][i%5]};animation-delay:${Math.random()*.4}s;transform:rotate(${Math.random()*360}deg)`;c.appendChild(s)}document.body.appendChild(c);setTimeout(()=>c.remove(),2400)}
+function countTo(el,to){const from=shown;let t0=null;shown=to;if(from===to||matchMedia('(prefers-reduced-motion:reduce)').matches){el.textContent=to;return}
+const f=t=>{if(!t0)t0=t;const k=Math.min(1,(t-t0)/800);el.textContent=Math.round(from+(to-from)*k);if(k<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function win(a,b){$('sheet').innerHTML=`<div class="ov mid" onclick="closeW()"><div class="win">${mascot(110)}<div class="hd">${a}</div><div class="mute">${b}</div><button class="g w" style="margin-top:14px">Awesome!</button></div></div>`;boom()}
+const closeW=()=>$('sheet').innerHTML='';
+const go=t=>{tab=t;draw();scrollTo(0,0)};
+function pick(b,fn){b.parentNode.querySelectorAll('button').forEach(x=>x.className='');b.className='on';fn()}
+function sheet(t,sub,inner,btn,call){$('sheet').innerHTML=`<div class="ov" onclick="if(event.target===this)closeW()"><div class="sh"><div class="hd">${t}</div><div class="mute">${sub}</div>${inner}<button class="g w" style="margin-top:14px" onclick="${call}">${btn}</button></div></div>`}
+const MS=`<div class="ms"><button class="on" onclick="pick(this,()=>M='JazzCash')">JazzCash</button><button onclick="pick(this,()=>M='Easypaisa')">Easypaisa</button></div>`;
+async function rpc(n,a){const{error}=await sb.rpc(n,a);if(error){toast(error.message);return false}await load();return true}
+async function load(){
+ const q=(t,f)=>f(sb.from(t).select('*'));
+ const[a,b,c,d,e,f,g,h]=await Promise.all([
+  sb.from('profiles').select('*').eq('id',U.id).single(),sb.from('settings').select('*'),
+  sb.from('tasks').select('*').order('id',{ascending:false}),sb.from('submissions').select('*').order('id',{ascending:false}),
+  sb.from('deposits').select('*').eq('user_id',U.id).order('id',{ascending:false}),
+  sb.from('withdrawals').select('*').eq('user_id',U.id).order('id',{ascending:false}),
+  sb.from('ledger').select('*').eq('user_id',U.id).order('id',{ascending:false}).limit(30),sb.rpc('get_referrals')]);
+ if(a.error||!a.data){$('app').innerHTML=`<div class="card">Could not load your account.<div class="mute">${esc(a.error?.message||'Profile not found')}</div><button class="o w" style="margin-top:10px" onclick="logout()">Log out</button></div>`;return}
+ P=a.data;D.cfg=Object.fromEntries((b.data||[]).map(x=>[x.key,+x.value]));D.tasks=c.data||[];D.subs=d.data||[];D.deps=e.data||[];D.wds=f.data||[];D.led=g.data||[];D.refs=h.data||[];draw()}
+async function logout(){await sb.auth.signOut();location.reload()}
+/* ---------- auth ---------- */
+function auth(){$('nav').innerHTML='';$('app').innerHTML=`<div class="card" style="text-align:center;margin-top:30px">${mascot(96)}<div class="hd" style="font-size:30px">CrownEarn</div><div class="mute">Complete tasks. Earn rewards. Withdraw to PKR.</div><div style="text-align:left">${mode==='signup'?`<label>Your name</label><input id="nm" placeholder="Name"><label>Referral code (optional)</label><input id="rf" value="${esc(REF)}" placeholder="Optional">`:''}<label>Email</label><input id="em" type="email" placeholder="you@email.com" autocomplete="email"><label>Password</label><input id="pw" type="password" placeholder="6+ characters" autocomplete="${mode==='signup'?'new-password':'current-password'}"></div><button class="g w" style="margin-top:16px" onclick="doAuth()">${mode==='signup'?'Create account':'Log in'}</button><p class="mute" style="margin-top:12px">${mode==='signup'?'Already have an account?':'New here?'} <a href="#" onclick="mode='${mode==='signup'?'login':'signup'}';auth();return false" style="color:var(--pri);font-weight:700">${mode==='signup'?'Log in':'Create account'}</a></p></div>`}
+async function doAuth(){const em=$('em').value.trim(),pw=$('pw').value;
+ if(!em||pw.length<6){toast('Enter your email and a password of 6+ characters');return}
+ if(mode==='signup'){const{data,error}=await sb.auth.signUp({email:em,password:pw,options:{data:{name:($('nm').value.trim()||'Friend').slice(0,40),ref:($('rf').value||'').trim()}}});
+  if(error){toast(error.message);return}
+  if(!data.session){toast('Check your email to confirm, then log in');mode='login';auth();return}U=data.user}
+ else{const{data,error}=await sb.auth.signInWithPassword({email:em,password:pw});if(error){toast(error.message);return}U=data.user}
+ await load()}
+/* ---------- tasks ---------- */
+const avail=()=>D.tasks.filter(t=>t.status==='live'&&t.owner!==U.id&&t.done_count<t.slots);
+function taskCard(t,k){const s=D.subs.find(x=>x.task_id===t.id&&x.user_id===U.id);
+ const b=!s?`<button onclick="openS(${t.id})">Submit proof</button>`:s.status==='pending'?'<span class="tag">Under review</span>':s.status==='approved'?'<span class="tag">Done ✔</span>':'<span class="tag" style="background:#ffe0e6;color:#c0392b">Rejected</span>';
+ return `<div class="card"><div class="gr"><span class="ic c${k%4}">${ICON[t.kind]||'⭐'}</span><div>${esc(t.title)}</div></div><div class="row" style="margin-top:10px"><span class="rw">+${t.reward_points} pts · PKR ${rs(t.reward_points)}</span><span class="gr" style="gap:8px">${t.link?`<a class="bt" href="${esc(t.link)}" target="_blank" rel="noopener noreferrer">Open</a>`:''}${b}</span></div></div>`}
+const openS=id=>sheet('Submit proof','Do the task first, then paste a screenshot link or your username on that site.','<label>Proof</label><input id="pf" placeholder="Link or username">','Send proof',`sendS(${id})`);
+async function sendS(id){const v=$('pf').value.trim();if(v.length<3){toast('Enter your proof');return}
+ if(await rpc('submit_task',{p_task:id,p_proof:v})){closeW();toast('Proof sent. Points arrive after review.')}}
+/* ---------- views ---------- */
+function homeView(){const today=new Date().toISOString().slice(0,10),yest=new Date(Date.now()-864e5).toISOString().slice(0,10);
+ const cl=P.last_claim===today,alive=cl||P.last_claim===yest,n=cl?P.streak:(alive?P.streak+1:1),filled=cl?((n-1)%7+1):((n-1)%7),bonus=n%7===0?200:(D.cfg.daily_bonus||50);
+ const left=Math.max(0,MINW()-P.points),pct=Math.min(100,P.points/MINW()*100),av=avail();
+ const days=[...Array(7)].map((_,i)=>`<b class="${i<filled?'d':(i===filled&&!cl?'t':'')}">${i<filled?'✔':(i===6?'🎁':i+1)}</b>`).join('');
+ return `<div class="top"><div><div class="hd">Hello, ${esc(P.name)} 👋</div><div class="mute">How much will you earn today?</div></div><span class="chip">🪙 ${P.points}</span></div>
+<div class="hero"><div class="hr"><div><small>Your earnings</small><div class="big"><span style="font-size:20px">PKR </span><span id="cnt">0</span></div></div>${mascot(92)}</div><div class="pb"><i style="width:${pct}%"></i></div><div class="bub">${left>0?`Coiny says: Great job! Only ${left} points left to withdraw 💪`:'Coiny says: Wow! You can withdraw now 🎉'}</div></div>
+<div class="card"><div class="row"><b>Daily bonus 🎁</b><span class="tag">${alive?P.streak:0}-day streak 🔥</span></div><div class="days">${days}</div><button class="${cl?'o':'g'} w" ${cl?'disabled':''} onclick="claim()">${cl?'Come back tomorrow':'Claim daily bonus +'+bonus}</button></div>
+<div class="qa"><button onclick="openD()"><span>➕</span>Deposit</button><button class="g" onclick="go('create')"><span>📣</span>Add task</button><button class="o" onclick="go('wallet')"><span>💸</span>Withdraw</button></div>
+<div class="sec">Tasks for you</div>${av.slice(0,2).map(taskCard).join('')||'<div class="card mute">No tasks right now. Check back soon!</div>'}${av.length?'<button class="o w" style="margin-top:12px" onclick="go(\'tasks\')">See all tasks</button>':''}`}
+function tasksView(){const av=avail();return `<div class="hd" style="margin:4px 2px">Tasks 📋</div><div class="mute" style="margin:0 2px">${av.length} available · every proof is reviewed</div>${av.map(taskCard).join('')||'<div class="card mute">No tasks right now. Check back soon!</div>'}`}
+function calc(){const p=+$('pr').value||0,n=+$('nw').value||0;$('sm').innerHTML=`Total cost: <b>PKR ${p*n}</b>`}
+async function mk(){const t=$('tt').value.trim(),l=$('lk').value.trim(),p=+$('pr').value,n=+$('nw').value;
+ if(t.length<5){toast('Enter a task title');return}if(!/^https?:\/\/.{4,}/.test(l)){toast('Enter a valid link starting with https://');return}
+ if(!(p>=2)||!(n>=5)){toast('Minimum is PKR 2 per task and 5 people');return}
+ if(p*n>P.credit_pkr){toast('Not enough credit. Please deposit first.');openD();return}
+ if(await rpc('create_task',{p_title:t,p_kind:T,p_link:l,p_price:p,p_slots:n}))win('Task submitted 📣','It goes live after the admin reviews it')}
+const ST={review:'Under review',live:'Live ✅',closed:'Completed',rejected:'Rejected'};
+function createView(){const mine=D.tasks.filter(t=>t.owner===U.id),ids=new Set(mine.map(t=>t.id)),rev=D.subs.filter(s=>s.status==='pending'&&ids.has(s.task_id)&&s.user_id!==U.id);
+ return `<div class="hd" style="margin:4px 2px">Add your task 📣</div><div class="mute" style="margin:0 2px">Paste your link, set the price, and people will complete it for you</div>
+<div class="card row"><span>Task credit: <b>PKR ${P.credit_pkr}</b></span><button class="g" onclick="openD()">Deposit</button></div>
+<div class="card"><label style="margin-top:0">Task type</label><div class="tp">${Object.keys(ICON).map(x=>`<button class="${T===x?'on':''}" onclick="pick(this,()=>T='${x}')">${x}</button>`).join('')}</div>
+<div class="warn">App installs, sign-ups and surveys work best. Follow, subscribe or view tasks on YouTube or TikTok can break their policies.</div>
+<label>Task title</label><input id="tt" maxlength="80" placeholder="e.g. Install my app and open it"><label>Link</label><input id="lk" placeholder="https://">
+<div class="two"><div><label>Price per task (PKR)</label><input id="pr" inputmode="numeric" value="5" oninput="calc()"></div><div><label>Number of people</label><input id="nw" inputmode="numeric" value="20" oninput="calc()"></div></div>
+<div class="sum" id="sm">Total cost: <b>PKR 100</b></div><button class="g w" style="margin-top:14px" onclick="mk()">Create task</button></div>
+${rev.length?`<div 
