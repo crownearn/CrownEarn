@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrownEarn Admin</title>
+<style>
+:root{--bg:#f4f1ff;--card:#fff;--ink:#241b4b;--mute:#6f6a8f;--pri:#6a4cf5;--line:#e6e0fb;--ok:#16b980;--bad:#e0475b}
+@media(prefers-color-scheme:dark){:root{--bg:#14102b;--card:#1e1940;--ink:#f0edff;--mute:#a9a3cf;--line:#2e2860}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:14px 14px 90px}
+h1{font-size:22px;margin:6px 0}h2{font-size:17px;margin:20px 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-top:10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mute{color:var(--mute);font-size:14px;word-break:break-word}
+button,a.b{font:inherit;font-weight:700;border:0;border-radius:10px;padding:8px 14px;background:var(--pri);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+button.ok{background:var(--ok)}button.no{background:var(--bad)}button.o{background:var(--line);color:var(--ink)}
+input,select{width:100%;font:inherit;padding:10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+label{display:block;font-weight:700;margin:10px 0 4px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;gap:6px;padding:8px;background:var(--card);border-top:1px solid var(--line)}
+nav button{flex:1;background:none;color:var(--mute);padding:8px 2px;font-size:14px}
+nav button.on{background:var(--pri);color:#fff}
+.tag{font-size:12px;padding:1px 8px;border-radius:99px;background:var(--line)}
+.toast{position:fixed;top:10px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:12px;z-index:9;max-width:92%}
+</style>
+</head>
+<body>
+<main id="app"><div class="card">Loading…</div></main>
+<nav id="nav"></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>window.supabase||document.write('<script src="https://fastly.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
+<script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
+<script src="admin.js"></script>
+</body>
+                                                                                                                                                       </html>
