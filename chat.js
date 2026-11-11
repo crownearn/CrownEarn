@@ -1,5 +1,5 @@
 /* CrownEarn chat: emoji, voice notes, edit, delete, ticks, live updates (shared by app and admin) */
-const Chat=(()=>{
+window.Chat=(()=>{
 const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $c=id=>document.getElementById(id);
 const EMO='😀 😁 😂 🤣 😊 😍 😘 😎 🤔 😢 😭 😡 👍 👎 🙏 👏 💪 🔥 ✨ 🎉 ❤️ 💚 💜 💰 💸 ✅ ❌ ⭐ 🙌 🤝 👌 😅 😇 🥳 😴 🤗 👋 🙂 😉 😮'.split(' ');
