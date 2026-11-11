@@ -1,7 +1,7 @@
 /* Admin extras: messages (chat), screenshot viewing, users with email, task pictures */
 let TH=null,TR='',MG=[],EM={};
 document.head.appendChild(Object.assign(document.createElement('script'),{src:'chat.js?v=1',onload:()=>{if(tab==='msgs'&&TH)draw()}}));
-const unreadA=()=>MG.filter(m=>m.sender==='user'&&!m.seen).length;
+function unreadA(){return MG.filter(m=>m.sender==='user'&&!m.seen).length}
 const unreadOf=id=>MG.filter(m=>m.user_id===id&&m.sender==='user'&&!m.seen).length;
 async function loadX(){const[m,e]=await Promise.all([sb.from('messages').select('*').order('id').limit(1500),sb.from('profiles').select('id,email')]);MG=m.data||[];EM=Object.fromEntries((e.data||[]).map(x=>[x.id,x.email||'']))}
 const shrink=async(f,mx=320,q=.8)=>{const b=await createImageBitmap(f),s=Math.min(1,mx/Math.max(b.width,b.height)),c=document.createElement('canvas');c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext('2d').drawImage(b,0,0,c.width,c.height);return new Promise(r=>c.toBlob(r,'image/jpeg',q))};
@@ -21,8 +21,9 @@ async function pub(){const t=$('tt').value.trim(),l=$('lk').value.trim(),p=+$('r
  if(!(p>0)||!(n>0)){toast('Enter reward points and number of people');return}
  let logo=null;if(f){const{data:{session}}=await sb.auth.getSession(),path=session.user.id+'/'+Date.now()+'.jpg',up=await sb.storage.from('logos').upload(path,await shrink(f),{contentType:'image/jpeg'});if(up.error){toast(up.error.message);return}logo=path}
  await rpc('admin_add_task',{p_title:t,p_kind:$('kd').value,p_link:l,p_points:p,p_slots:n,p_logo:logo},'Task published')}
+async function payW(id){const n=prompt('Enter the transaction ID of the payment you sent (the user will see it as a receipt):');if(n===null)return;if(n.trim().length<4){toast('Please enter a valid transaction ID');return}await rpc('review_withdraw',{p_id:id,p_ok:true,p_note:n.trim()},'Marked paid')}
 const _draw=draw;
-draw=function(){_draw();if(window.Chat){if(tab==='msgs'&&TH)Chat.open($('chat'),TH,'admin',TR);else Chat.close()}
+draw=function(){_draw();document.querySelectorAll('button[onclick*="review_withdraw"][onclick*="p_ok:true"]').forEach(b=>{const m=/p_id:(\d+)/.exec(b.getAttribute('onclick'));if(m)b.setAttribute('onclick','payW('+m[1]+')')});if(window.Chat){if(tab==='msgs'&&TH)Chat.open($('chat'),TH,'admin',TR);else Chat.close()}
  const tt=$('tt');if(tab==='tasks'&&tt&&!$('lg')){const lb=tt.previousElementSibling;if(lb)lb.insertAdjacentHTML('beforebegin','<label>Task picture (app icon, game logo or video thumbnail)</label><input id="lg" type="file" accept="image/*">')}};
 window.onChatSeen=async()=>{await loadX();const nb=document.querySelectorAll('#nav button')[3];if(nb)nb.textContent='Messages'+(unreadA()?' ('+unreadA()+')':'')};
 setInterval(async()=>{if(!sb||document.hidden||!D.users.length)return;await loadX();const nb=document.querySelectorAll('#nav button')[3];if(nb)nb.textContent='Messages'+(unreadA()?' ('+unreadA()+')':'');if(tab==='msgs'&&!TH)draw()},15000);
