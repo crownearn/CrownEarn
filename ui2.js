@@ -1,32 +1,19 @@
-
-function mountFab(){
- if(!P||$('fab'))return;
- document.body.insertAdjacentHTML('beforeend',`
- <button id="fab" aria-label="Customer service"
- onclick="openHelp()"
- style="
- position:fixed;
- right:10px;
- bottom:calc(88px + env(safe-area-inset-bottom,0px));
- height:46px;
- border-radius:23px;
- border:2px solid var(--gold);
- background:#fff;
- color:#241b4b;
- box-shadow:0 4px 12px rgba(0,0,0,.22);
- z-index:25;
- display:flex;
- align-items:center;
- gap:3px;
- padding:0 10px 0 3px;
- font-weight:700;
- font-size:10px;
- line-height:1.1;
- ">
- ${AGENT(34)}
- <span style="text-align:left">Customer<br>Service</span>
- <i class="bdg" id="fbd"
- style="position:absolute;top:-4px;right:-4px;display:none"></i>
- </button>`);
- fabBadge();
-}
+/* CrownEarn UI 2: Referral page, floating Help button with chat panel */
+const WA=`<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>`;
+function referView(){
+ const pct=D.cfg.referral_percent??10,fb=+D.cfg.referral_first_bonus||0,R=D.refs||[],earned=R.reduce((a,x)=>a+(+x.earned||0),0),act=R.filter(x=>+x.tasks>0).length;
+ const link=refLink(),msg='Join CrownEarn: complete simple tasks and earn PKR. '+link;
+ return `<div class="hd" style="margin:4px 2px">Referral 🤝</div><div class="mute" style="margin:0 2px">Invite friends. Earn commission whenever they earn.</div>
+<div class="hero" style="display:block;text-align:center"><small>Your commission</small><div class="big">${pct}%</div><small>of every task your friends complete, for as long as they use the app${fb?`<br>+ ${fb} pts when a friend finishes their first task`:''}</small></div>
+<div class="grid3"><div class="card"><b>${R.length}</b><span class="mute">Friends</span></div><div class="card"><b>${act}</b><span class="mute">Active</span></div><div class="card"><b>${earned}</b><span class="mute">Pts earned</span></div></div>
+<div class="card"><b>Your link</b><div class="sum" style="word-break:break-all"><b dir="ltr">${esc(link)}</b></div><div class="two"><button class="g" onclick="copyRef()">Copy link</button><a href="https://wa.me/?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener noreferrer" style="background:#25d366;color:#fff;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;border-radius:14px;padding:10px 14px;text-decoration:none;border-bottom:4px solid #1a9e4b">${WA} WhatsApp</a></div><div class="mute" style="margin-top:8px">Your code: <b>${esc(P.ref_code)}</b></div></div>
+<div class="card"><b>How it works</b><div class="mute">1. Send your link to a friend, for example on WhatsApp.<br>2. They sign up and complete tasks.<br>3. You get ${pct}% extra on every approved task. For example, a friend earns 500 pts and you get ${Math.floor(500*pct/100)} pts. It does not reduce their earnings.</div></div>
+<div class="sec">Your friends (${R.length})</div>${R.map(x=>`<div class="card"><div class="row"><b>${esc(x.name)} <span class="mute">· ID ${esc(x.fid||'')}</span></b><span class="rw">+${x.earned} pts</span></div><div class="mute">Joined ${new Date(x.joined).toLocaleDateString()} · ${x.tasks??0} tasks done${+x.tasks>0?' · active':' · not started yet'}</div></div>`).join('')||'<div class="card mute">No friends yet. Share your link to get started.</div>'}`}
+const AGENT=n=>`<svg width="${n}" height="${n}" viewBox="0 0 64 64" aria-hidden="true"><path d="M12 62c0-12 9-18 20-18s20 6 20 18z" fill="#6a4cf5"/><rect x="28" y="40" width="8" height="8" rx="3" fill="#f2c09a"/><circle cx="32" cy="30" r="15" fill="#ffd9b3"/><path d="M17 29c0-10 6-17 15-17s15 7 15 17c-3-6-8-9-15-9s-12 3-15 9z" fill="#4a3200"/><path d="M15 31v-3c0-11 7-19 17-19s17 8 17 19v3" fill="none" stroke="#2b2b3a" stroke-width="3.5" stroke-linecap="round"/><rect x="10" y="28" width="7" height="12" rx="3.5" fill="#2b2b3a"/><rect x="47" y="28" width="7" height="12" rx="3.5" fill="#2b2b3a"/><path d="M50.5 39c0 7-6 10-13 10" fill="none" stroke="#2b2b3a" stroke-width="2.5" stroke-linecap="round"/><circle cx="36.5" cy="49" r="3" fill="#2b2b3a"/><circle cx="26.5" cy="31" r="2" fill="#4a3200"/><circle cx="37.5" cy="31" r="2" fill="#4a3200"/><ellipse cx="23" cy="36" rx="3" ry="2" fill="#ff9aa2" opacity=".7"/><ellipse cx="41" cy="36" rx="3" ry="2" fill="#ff9aa2" opacity=".7"/><path d="M27 38c2.5 3 7.5 3 10 0" fill="none" stroke="#4a3200" stroke-width="2" stroke-linecap="round"/></svg>`;
+function fabBadge(){const b=$('fbd');if(b){b.style.display=unread?'inline-block':'none';b.textContent=unread}}
+function mountFab(){if(!P||$('fab'))return;document.body.insertAdjacentHTML('beforeend',`<button id="fab" aria-label="Customer service" onclick="openHelp()" style="position:fixed;right:14px;bottom:calc(88px + env(safe-area-inset-bottom,0px));height:62px;border-radius:31px;border:3px solid var(--gold);background:#fff;color:#241b4b;box-shadow:0 6px 18px rgba(0,0,0,.25);z-index:25;display:flex;align-items:center;gap:4px;padding:0 14px 0 4px;font-weight:700;font-size:12px;line-height:1.15">${AGENT(46)}<span style="text-align:left">Customer<br>Service</span><i class="bdg" id="fbd" style="position:absolute;top:-4px;right:-4px;display:none"></i></button>`);fabBadge()}
+function openHelp(){if($('hp')||!window.Chat)return;const d=document.createElement('div');d.id='hp';d.className='ov';d.style.zIndex=40;d.onclick=e=>{if(e.target===d)closeHelp()};
+ d.innerHTML=`<div class="sh" style="padding:14px"><div class="row"><div class="hd gr" style="font-size:20px">${AGENT(34)} Customer Service</div><button class="o" style="padding:4px 12px" onclick="closeHelp()" aria-label="Close">✕</button></div>${helpView().replace(/<div class="hd"[^>]*>.*?<\/div>/,'')}</div>`;
+ document.body.appendChild(d);Chat.open($('chat'),U.id,'user',helpRef);fetchHours()}
+function closeHelp(){if(window.Chat)Chat.close();const d=$('hp');if(d)d.remove()}
+function patch2(){if(tab==='wallet'){const bd=[...document.querySelectorAll('#app .sec')].find(e=>e.textContent==='My badges');if(bd){const c=bd.nextElementSibling;if(c)c.remove();bd.remove()}}}
