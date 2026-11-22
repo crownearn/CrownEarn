@@ -45,7 +45,7 @@ function homeHtml(){const d=((B&&B.draws)||[]).filter(isOpen).sort((a,b)=>b.priz
  const body=d?`<div class="lkp">🏆 ${d.prize_points} pts</div><div class="lkn">≈ PKR ${rsF(d.prize_points)}</div><div class="lkd">${esc(d.title)}</div><div class="lkm2"><span>${d.entry_cost>0?'Entry: '+d.entry_cost+' pts':'Free entry'}</span> · <span>${d.entries} joined</span></div>`:'<div class="lkd" style="margin:14px 0 12px">Next draw coming soon ✨</div>';
  const act=d?(d.joined?'<span class="lkj">Joined ✔ Good luck 🍀</span>':`<button class="lkb" onclick="LuckyDraw.join(${d.id})">Join now 🍀</button>`):'';
  return `<div class="lk" id="lkHome"><i class="lks" style="top:10px;left:14px">✨</i><i class="lks" style="top:16px;right:16px;animation-delay:.6s">💎</i><i class="lks" style="bottom:56px;left:10px;animation-delay:1.1s">⭐</i><i class="lks" style="bottom:70px;right:12px;animation-delay:1.6s">✨</i>
-<div class="lkt"><span class="lkv">👑 VIP</span><b>Lucky Draw</b></div><div class="lkreels">${reel(0,1.7)}${reel(2,2.2)}${reel(4,2.7)}</div>${body}
+<div class="lkt"><span>👑</span><b>Lucky Draw</b><span>👑</span></div><div class="lkreels">${reel(0,1.7)}${reel(2,2.2)}${reel(4,2.7)}</div>${body}
 <div class="lkrow">${act}<button class="lko" onclick="LuckyDraw.open()">View all draws</button></div>${w?`<div class="lkw">🎉 ${esc(w.name)} won ${w.prize_points} pts</div>`:''}</div>`}
 function inject(force){const app=document.getElementById('app');if(!app||!B)return;const qa=app.querySelector('.qa');if(!qa||!app.querySelector('.hero'))return;
  const ex=document.getElementById('lkHome');if(ex&&!force)return;if(ex)ex.remove();qa.insertAdjacentHTML('afterend',homeHtml())}
