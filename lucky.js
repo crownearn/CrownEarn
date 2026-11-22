@@ -2,7 +2,7 @@
 (function(){
 if(window.LuckyDraw)return;
 const L=(e,u)=>{try{return localStorage.getItem('lang')==='ur'?u:e}catch(x){return e}};
-try{Object.assign(KIND,{draw_entry:'Lucky draw entry',draw_win:'Lucky draw prize',draw_refund:'Lucky draw refund'})}catch(e){}
+try{Object.assign(KIND,{draw_entry:'Lucky draw entry',draw_win:'Lucky draw prize',draw_refund:'Lucky draw refund',admin_adjust:'Admin adjustment'})}catch(e){}
 (function w(){if(!window.LangAdd)return setTimeout(w,60);LangAdd({
 'Lucky Draw':'لکی ڈرا','Try again':'دوبارہ کوشش کریں','VIP':'وی آئی پی','Open draws':'کھلے ڈرا','Past winners':'پچھلے فاتح','Your points:':'آپ کے پوائنٹس:',
 'Join':'شامل ہوں','Join now':'ابھی شامل ہوں','Joined ✔':'شامل ✔','Joined ✔ Good luck 🍀':'شامل ✔ نصیب اچھا ہو 🍀','View all draws':'سب ڈرا دیکھیں',
@@ -10,7 +10,7 @@ try{Object.assign(KIND,{draw_entry:'Lucky draw entry',draw_win:'Lucky draw prize
 'No draws right now. Check back soon!':'ابھی کوئی ڈرا نہیں۔ جلد دوبارہ دیکھیں!','No winners yet.':'ابھی کوئی فاتح نہیں۔',
 '🎉 Congratulations! You won a lucky draw.':'🎉 مبارک ہو! آپ لکی ڈرا جیت گئے۔','How it works':'یہ کیسے کام کرتا ہے',
 'Tap Join. When entries close, the winner is chosen and the prize points are added to their account.':'شامل ہوں دبائیں۔ انٹریاں بند ہونے پر فاتح چنا جاتا ہے اور انعام کے پوائنٹس اس کے اکاؤنٹ میں شامل ہو جاتے ہیں۔',
-'Lucky draw entry':'لکی ڈرا انٹری','Lucky draw prize':'لکی ڈرا انعام','Lucky draw refund':'لکی ڈرا کی واپسی'},
+'Lucky draw entry':'لکی ڈرا انٹری','Lucky draw prize':'لکی ڈرا انعام','Lucky draw refund':'لکی ڈرا کی واپسی','Admin adjustment':'ایڈمن کی تبدیلی'},
 [[/^🏆 (\d+) pts · PKR ([\d.]+)$/,(a,b)=>`🏆 ${a} پوائنٹس · ${b} روپے`],[/^🏆 (\d+) pts$/,n=>`🏆 ${n} پوائنٹس`],[/^≈ PKR ([\d.]+)$/,x=>`≈ ${x} روپے`],
 [/^Entry: (\d+) pts$/,n=>`انٹری: ${n} پوائنٹس`],[/^(\d+) joined$/,n=>`${n} شامل`],[/^Ends: (.+)$/,x=>`اختتام: ${x}`],[/^\+(\d+) pts$/,n=>`+${n} پوائنٹس`],
 [/^🎉 (.+) won (\d+) pts$/,(n,p)=>`🎉 ${n} نے ${p} پوائنٹس جیتے`]])})();
