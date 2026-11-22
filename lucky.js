@@ -1,10 +1,10 @@
-/* CrownEarn Lucky Draw v2: VIP card on the Home screen + draw page. Load after chat.js in index.html */
+/* (also holds the Urdu text for "Try again") CrownEarn Lucky Draw v2: VIP card on the Home screen + draw page. Load after chat.js in index.html */
 (function(){
 if(window.LuckyDraw)return;
 const L=(e,u)=>{try{return localStorage.getItem('lang')==='ur'?u:e}catch(x){return e}};
 try{Object.assign(KIND,{draw_entry:'Lucky draw entry',draw_win:'Lucky draw prize',draw_refund:'Lucky draw refund'})}catch(e){}
 (function w(){if(!window.LangAdd)return setTimeout(w,60);LangAdd({
-'Lucky Draw':'لکی ڈرا','VIP':'وی آئی پی','Open draws':'کھلے ڈرا','Past winners':'پچھلے فاتح','Your points:':'آپ کے پوائنٹس:',
+'Lucky Draw':'لکی ڈرا','Try again':'دوبارہ کوشش کریں','VIP':'وی آئی پی','Open draws':'کھلے ڈرا','Past winners':'پچھلے فاتح','Your points:':'آپ کے پوائنٹس:',
 'Join':'شامل ہوں','Join now':'ابھی شامل ہوں','Joined ✔':'شامل ✔','Joined ✔ Good luck 🍀':'شامل ✔ نصیب اچھا ہو 🍀','View all draws':'سب ڈرا دیکھیں',
 'Entries closed':'انٹریاں بند','Winner coming soon':'فاتح کا اعلان جلد ہوگا','Free entry':'مفت انٹری','Next draw coming soon ✨':'اگلا ڈرا جلد آ رہا ہے ✨',
 'No draws right now. Check back soon!':'ابھی کوئی ڈرا نہیں۔ جلد دوبارہ دیکھیں!','No winners yet.':'ابھی کوئی فاتح نہیں۔',
