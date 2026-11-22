@@ -1,23 +1,119 @@
-/* Admin: Lucky Draw tab. Load after admin2.js in admin.html */
-let DR=[],DC={},EN={},OPEN=null;
-const _lx=loadX;
-loadX=async function(){await _lx();try{const[a,b]=await Promise.all([sb.from('draws').select('*').order('id',{ascending:false}).limit(50),sb.from('draw_entries').select('draw_id').limit(5000)]);DR=a.data||[];DC={};(b.data||[]).forEach(x=>DC[x.draw_id]=(DC[x.draw_id]||0)+1)}catch(e){}};
-function entriesV(d){const l=EN[d.id]||[],done=d.status==='drawn';
- return `<div style="margin-top:8px">${l.map(e=>`<div class="card row"><div><b>${esc(e.uname)}</b><div class="mute">${esc(e.uemail||'')}</div></div>${!done?B('ok','Winner',`pickW(${d.id},'${e.uid}')`):d.winner_id===e.uid?'<span class="tag">🏆 Winner</span>':''}</div>`).join('')||'<div class="mute">No entries yet</div>'}</div>`}
-function drawsV(){
- return `<h1>Lucky Draw</h1><div class="card"><label style="margin-top:0">Title</label><input id="dt" placeholder="Weekend lucky draw"><label>Prize (points)</label><input id="dp" inputmode="numeric" placeholder="5000"><label>Entry cost (points, 0 = free)</label><input id="dc" inputmode="numeric" value="0"><label>Entries close at (optional)</label><input id="de" type="datetime-local"><div style="margin-top:10px">${B('ok','Create draw','createDraw()')}</div></div>`
- +(DR.map(d=>{const st=d.status==='drawn'?'Winner: '+esc((D.name&&D.name[d.winner_id])||'User'):d.status==='closed'?'Entries closed':'Open';
-  return `<div class="card"><div class="row"><b>${esc(d.title)}</b><span class="tag">${st}</span></div><div class="mute">Prize ${d.prize_points} pts · Entry ${d.entry_cost} pts · ${DC[d.id]||0} joined${d.ends_at?' · closes '+new Date(d.ends_at).toLocaleString():''}</div><div class="row" style="margin-top:8px">${B('o',OPEN===d.id?'Hide entries':'Entries','showEntries('+d.id+')')}${d.status==='open'?B('o','Close entries','closeDraw('+d.id+')'):''}${d.status!=='drawn'?B('no','Cancel','cancelDraw('+d.id+')'):''}</div>${OPEN===d.id?entriesV(d):''}</div>`}).join('')||'<div class="mute" style="margin-top:10px">No draws yet</div>')}
-async function createDraw(){const t=$('dt').value.trim(),p=+$('dp').value,c=+($('dc').value||0),e=$('de').value;
- if(t.length<3){toast('Enter a title');return}if(!(p>0)){toast('Enter the prize points');return}
- await rpc('admin_create_draw',{p_title:t,p_prize:p,p_cost:c,p_ends:e?new Date(e).toISOString():null},'Draw created')}
-async function showEntries(id){if(OPEN===id){OPEN=null;draw();return}
- const{data,error}=await sb.rpc('admin_draw_entries',{p_draw:id});if(error){toast(error.message);return}EN[id]=data||[];OPEN=id;draw()}
-async function closeDraw(id){await rpc('admin_close_draw',{p_id:id},'Entries closed')}
-async function cancelDraw(id){if(!confirm('Cancel this draw? Entry points will be refunded to everyone.'))return;await rpc('admin_cancel_draw',{p_id:id},'Draw cancelled')}
-async function pickW(id,uid){const d=DR.find(x=>x.id===id),e=(EN[id]||[]).find(x=>x.uid===uid);if(!d)return;
- if(!confirm('Give '+d.prize_points+' points to '+(e?e.uname:'this user')+'?'))return;
- await rpc('admin_pick_winner',{p_draw:id,p_user:uid},'Winner selected, points sent')}
-const _d3=draw;
-draw=function(){const mine=tab==='draws';if(mine)tab='inbox';_d3();if(mine){tab='draws';$('app').innerHTML=drawsV()}
- const n=$('nav');if(n){if(mine)n.querySelectorAll('button.on').forEach(b=>b.classList.remove('on'));n.insertAdjacentHTML('beforeend',`<button class="${mine?'on':''}" onclick="tab='draws';draw();scrollTo(0,0)">Draw</button>`)}};
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CrownEarn</title>
+<link rel="manifest" href="manifest.json?v=1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CrownEarn">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f4f1ff;--card:#fff;--ink:#241b4b;--mute:#6f6a8f;--pri:#6a4cf5;--pd:#4b33c4;--gold:#ffc83d;--gd:#d99a00;--mint:#16b980;--line:#e6e0fb;--soft:#efeaff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14102b;--card:#1e1940;--ink:#f0edff;--mute:#a9a3cf;--line:#2e2860;--soft:#2a2358}}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.5}
+main{max-width:520px;margin:0 auto;padding:14px 16px 110px}
+.hd{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:22px;line-height:1.5}
+.sec{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:19px;margin:22px 2px 0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.chip{background:var(--card);border:2px solid var(--gold);border-radius:99px;padding:2px 14px;font-weight:700;white-space:nowrap}
+.hero{background:linear-gradient(150deg,#8a63ff,#5a3be0);color:#fff;border-radius:28px;padding:20px;margin-top:12px;box-shadow:0 8px 0 #4129b0,0 18px 30px rgba(74,50,190,.3)}
+.hr{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.hero small{opacity:.9;font-size:14px}
+.big{font-family:'Baloo 2',system-ui,sans-serif;font-weight:800;font-size:46px;line-height:1.1}
+.mas{flex:none;animation:bob 2.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-6px) rotate(3deg)}}
+@media(prefers-reduced-motion:reduce){.mas{animation:none}}
+.bub{background:rgba(255,255,255,.18);border-radius:16px;padding:8px 14px;margin-top:14px;font-size:15px}
+.pb{height:16px;border-radius:99px;background:rgba(255,255,255,.25);margin-top:12px;overflow:hidden}
+.pb i{display:block;height:100%;border-radius:99px;background:linear-gradient(180deg,#ffe07a,#ffc83d);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12);transition:width .8s}
+.card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:14px;margin-top:12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gr{display:flex;align-items:center;gap:12px}
+.days{display:flex;justify-content:space-between;margin:12px 0}
+.days b{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--soft);color:var(--mute);font-size:14px}
+.days b.d{background:var(--gold);color:#4a3200}
+.days b.t{border:3px dashed var(--pri);color:var(--pri);background:var(--card)}
+.ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;flex:none}
+.c0{background:#d9f5e8}.c1{background:#fff0c4}.c2{background:#dfe8ff}.c3{background:#ffe0e6}
+.rw{display:inline-block;background:#fff0c4;color:#7a5200;font-weight:700;font-size:13px;border-radius:99px;padding:1px 12px}
+.tag{font-size:13px;padding:2px 10px;border-radius:99px;background:var(--soft);color:var(--pri);font-weight:700;white-space:nowrap}
+.mute{color:var(--mute);font-size:14px}
+button{font:inherit;font-family:'Baloo 2',system-ui,sans-serif;font-weight:700;border:0;border-bottom:4px solid var(--pd);border-radius:14px;padding:6px 18px;background:var(--pri);color:#fff;cursor:pointer}
+button:active{transform:translateY(2px);border-bottom-width:2px}
+button.g{background:var(--gold);color:#4a3200;border-color:var(--gd)}
+button.o{background:var(--soft);color:var(--pri);border-color:var(--line)}
+button.w{width:100%;padding:10px;font-size:18px}
+button:disabled{opacity:.45}
+button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.bd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center;font-size:13px;line-height:1.4}
+.bd div{opacity:.35;filter:grayscale(1)}
+.bd div.on{opacity:1;filter:none}
+.bd span{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 4px;border-radius:50%;background:var(--soft);font-size:26px}
+.wc{background:linear-gradient(150deg,#16b980,#0a7d57);color:#fff;border-radius:28px;padding:22px;box-shadow:0 8px 0 #07583e,0 18px 30px rgba(7,88,62,.3)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;text-align:center}
+.grid3 .card{margin:0}.grid3 b{display:block;font-size:24px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:center;padding:0 12px calc(10px + env(safe-area-inset-bottom,0px))}
+nav div{display:flex;gap:4px;background:var(--card);border:2px solid var(--line);border-radius:99px;padding:6px;box-shadow:0 10px 30px rgba(36,27,75,.2);width:100%;max-width:420px}
+nav button{flex:1;background:none;color:var(--mute);border:0;padding:4px;font-size:14px;border-radius:99px}
+nav button.on{background:var(--pri);color:#fff}
+nav span{display:block;font-size:20px;line-height:1.3}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:14px;font-size:15px;z-index:60;max-width:92%;text-align:center}
+.ov{position:fixed;inset:0;background:rgba(20,10,60,.6);z-index:30;display:flex;align-items:flex-end;justify-content:center}
+.ov.mid{align-items:center;padding:20px}
+.sh{background:var(--card);width:100%;max-width:520px;border-radius:28px 28px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px))}
+.win{background:var(--card);border-radius:28px;padding:22px;text-align:center;width:100%;max-width:340px}
+.ms{display:flex;gap:8px;margin:10px 0}
+.ms button{flex:1;background:var(--soft);color:var(--ink);border:2px solid transparent}
+.ms button.on{border-color:var(--gold)}
+input{width:100%;font:inherit;font-size:18px;padding:11px;border-radius:14px;border:2px solid var(--line);background:var(--bg);color:var(--ink);text-align:left;direction:ltr}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.cf i{position:absolute;top:-14px;width:8px;height:14px;border-radius:2px;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{top:105%;opacity:.5}}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.qa button{display:block;padding:8px 4px;font-size:14px;line-height:1.5}
+.qa span{display:block;font-size:24px}
+.tp{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.tp button{background:var(--soft);color:var(--ink);border:2px solid transparent;padding:2px 14px;font-size:14px}
+.tp button.on{border-color:var(--pri);color:var(--pri)}
+label{display:block;font-weight:700;margin:12px 0 4px}
+.sum{background:var(--soft);border-radius:16px;padding:12px;margin-top:12px;font-size:15px}
+.warn{background:#fff3cd;color:#6b4a00;border-radius:14px;padding:8px 12px;font-size:13px;margin-top:8px}
+.mc{background:linear-gradient(150deg,#8a63ff,#5a3be0);color:#fff;border-radius:28px;padding:20px;margin-top:14px;box-shadow:0 8px 0 #4129b0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rt{text-align:right;direction:rtl}
+nav button{font-size:13px}
+a.bt{display:inline-block;text-decoration:none;font-weight:700;border-radius:14px;padding:6px 14px;background:var(--soft);color:var(--pri);font-size:14px}
+.sh{max-height:90vh;overflow:auto}
+</style>
+</head>
+<body>
+<script>
+let dip=null;
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;try{if(localStorage.getItem('noinst'))return}catch(x){}
+ const b=document.createElement('div');b.id='ib';b.style.cssText='position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top,0px));z-index:70;background:#fff;color:#241b4b;border:2px solid #ffc83d;border-radius:16px;padding:10px 12px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 24px rgba(0,0,0,.25);font-weight:700';
+ b.innerHTML='<span style="flex:1">📲 Install CrownEarn on your phone</span><button id="ibi" style="background:#6a4cf5;color:#fff;border:0;border-radius:10px;padding:8px 14px;font:inherit">Install</button><button id="ibx" aria-label="Close" style="background:none;border:0;font-size:18px;color:#6f6a8f">✕</button>';
+ document.body.appendChild(b);document.getElementById('ibi').onclick=async()=>{b.remove();dip.prompt();await dip.userChoice};
+ document.getElementById('ibx').onclick=()=>{b.remove();try{localStorage.setItem('noinst','1')}catch(x){}}});
+addEventListener('appinstalled',()=>{const b=document.getElementById('ib');if(b)b.remove()});
+if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+</script>
+<main id="app"><div class="card">Loading…</div></main>
+<div id="sheet"></div>
+<nav id="nav"></nav>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>window.supabase||document.write('<script src="https://fastly.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
+<script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
+<script src="app1.js?v=2"></script>
+<script src="app2.js?v=2"></script>
+<script src="app3.js?v=1"></script>
+<script src="chat.js?v=1"></script>
+<script src="lucky.js?v=2"></script>
+<script src="app4.js?v=1"></script>
+</body>
+</html>
