@@ -28,12 +28,14 @@ loadX=async function(){try{
  if(UO)await fetchDetail(UO)}catch(e){console.error(e)}};
 async function userSearch(q){UQ=q===undefined?$('uq').value.trim():q;UO=null;await fetchUsers();draw()}
 async function openU(id){if(UO===id){UO=null;draw();return}UO=id;await fetchDetail(id);draw()}
+const pr=()=>+(sv('pkr_per_point').value)||0.01;
+function pv(){const v=+($('ap').value||0),e=$('apv');if(e)e.textContent=v?'= PKR '+(v*pr()).toFixed(2)+' (withdrawable)':''}
 async function applyAdj(id){const p=Math.trunc(+($('ap').value||0)),c=+($('ac').value||0),n=$('an').value.trim(),u=UR.find(x=>x.id===id);
  if(!isFinite(p)||!isFinite(c)||(p===0&&c===0)){toast('Enter points or credit');return}if(n.length<3){toast('Enter a reason');return}
- if(!confirm('Change '+(u?u.name:'this user')+': '+p+' points, PKR '+c+'?\nReason: '+n))return;
+ if(!confirm('Change '+(u?u.name:'this user')+'?\n💰 Withdrawable points: '+p+(p?' (about PKR '+(p*pr()).toFixed(2)+')':'')+'\n🧾 Task credit: PKR '+c+'\nReason: '+n))return;
  await rpc('admin_adjust',{p_user:id,p_points:p,p_pkr:c,p_note:n},'Done')}
 function detailV(u,d){return `<div style="margin-top:10px"><div class="mute">Deposited PKR ${d.dep} · Paid out PKR ${d.wd} · Pending PKR ${d.wdp} · Friends invited ${d.refs} · Streak ${u.streak||0}</div>
-<div class="card" style="margin-top:8px"><b>Add or remove</b><label>Points (use minus to remove)</label><input id="ap" inputmode="numeric" placeholder="500 or -500"><label>Credit PKR (use minus to remove)</label><input id="ac" inputmode="decimal" placeholder="100 or -100"><label>Reason (the user will see it)</label><input id="an" maxlength="100" placeholder="e.g. Contest prize"><div style="margin-top:8px">${B('ok','Apply',`applyAdj('${u.id}')`)}</div></div>
+<div class="card" style="margin-top:8px"><b>Give or take away</b><div class="mute">Use a minus sign (-) to take away.</div><label>💰 Withdrawable points (the user CAN withdraw these)</label><input id="ap" inputmode="numeric" placeholder="e.g. 10000 or -500" oninput="pv()"><div class="mute" id="apv" style="margin-top:4px"></div><div class="mute">1 PKR = ${Math.round(1/pr())} points</div><label>🧾 Task credit in PKR (only for adding tasks, CANNOT be withdrawn)</label><input id="ac" inputmode="decimal" placeholder="e.g. 100 or -100"><label>Reason (the user will see it)</label><input id="an" maxlength="100" placeholder="e.g. Contest prize"><div style="margin-top:8px">${B('ok','Apply',`applyAdj('${u.id}')`)}</div></div>
 <div class="mute" style="margin:8px 0 4px">Recent activity</div>${d.led.map(l=>`<div class="row mute"><span>${esc(l.kind)}${l.note?' · '+esc(l.note):''}</span><span>${l.points?(l.points>0?'+':'')+l.points+' pts':''} ${Number(l.pkr)?'PKR '+l.pkr:''}</span></div>`).join('')||'<div class="mute">No activity</div>'}</div>`}
 function userCard(u){const d=UD[u.id],open=UO===u.id;
  return `<div class="card"><div class="row"><div><b>${esc(u.name)}</b> ${u.is_admin?'<span class="tag">admin</span>':''}${u.is_blocked?'<span class="tag" style="background:var(--bad);color:#fff">blocked</span>':''}<div class="mute">${esc(u.email||'')} · Joined ${new Date(u.created_at).toLocaleDateString()}</div></div><div class="mute" style="text-align:right">${u.points} pts<br>Credit PKR ${u.credit_pkr}</div></div>
@@ -55,6 +57,23 @@ async function cancelDraw(id){if(!confirm('Cancel this draw? Entry points will b
 async function pickW(id,uid){const d=DR.find(x=>x.id===id),e=(EN[id]||[]).find(x=>x.uid===uid);if(!d)return;
  if(!confirm('Give '+d.prize_points+' points to '+(e?e.uname:'this user')+'?'))return;
  await rpc('admin_pick_winner',{p_draw:id,p_user:uid},'Winner selected, points sent')}
+
+/* ---- VIP dashboard tiles + settings grouped like the app (Wallet, Tasks, Referral...) ---- */
+statsHtml=function(){const r=+((D.st.find(x=>x.key==='pkr_per_point')||{}).value||0.01),s=ST||{},owed=Math.round((s.points||0)*r),sur=Math.round((s.dep_total||0)-(s.paid_total||0)-(s.credit||0)-owed);
+ const t=(i,v,l)=>`<div class="stl"><span>${i} ${l}</span><b>${v}</b></div>`;
+ return `<div class="hd" style="margin-top:8px">Dashboard</div><div class="sg">${t('👥',s.users||0,'Users')}${t('✅',s.done_today||0,'Approved today')}${t('📥','PKR '+(s.dep_total||0),'Deposited')}${t('📤','PKR '+(s.paid_total||0),'Paid out')}${t('🪙','PKR '+owed,'Owed (points)')}${t('🧾','PKR '+Math.round(s.credit||0),'Owed (task credit)')}${t('⏳','PKR '+(s.pend_dep||0),'Deposits waiting')}${t('💸','PKR '+(s.pend_wd||0),'Withdrawals waiting')}<div class="stl w2 ${sur<0?'bad':'good'}"><span>${sur<0?'⚠️ More is owed than deposited':'🏦 Balance after paying everyone'}</span><b>PKR ${sur}</b></div></div>${s.blocked?`<div class="mute" style="margin-top:6px">Blocked users: ${s.blocked}</div>`:''}`};
+let SO={};
+function grp(k,ic,cl,title,sub,body){const o=SO[k]===undefined?k==='wallet':SO[k];
+ return `<details class="grp" ${o?'open':''} ontoggle="SO['${k}']=this.open"><summary><span class="ic ${cl}">${ic}</span><div><div class="sec">${title}</div><div class="mute">${sub}</div></div></summary><div class="gb">${body}</div></details>`}
+const numC=k=>`<div class="card"><label style="margin-top:0">${NUM[k]}</label><div class="row" style="flex-wrap:nowrap"><input id="s_${k}" inputmode="decimal" value="${esc(sv(k).value)}">${B('ok','Save',`saveS('${k}')`)}</div></div>`;
+settingsV=function(){return `<h1>Settings</h1>`
+ +grp('wallet','👛','c0','Wallet &amp; withdrawals','Point value, minimum withdrawal, minimum deposit',['pkr_per_point','min_withdraw_points','min_deposit'].map(numC).join(''))
+ +grp('tasks','📋','c1','Tasks','Fee taken from tasks that users create',numC('fee_percent'))
+ +grp('referral','🤝','c2','Referral','Commission and first-task bonus for inviting friends',['referral_percent','referral_first_bonus'].map(numC).join(''))
+ +grp('bonus','🎁','c3','Daily bonus','Points users get for the daily claim',numC('daily_bonus'))
+ +grp('pay','💳','c0','Payment accounts','Numbers shown to users when they deposit',payCards())
+ +grp('news','📢','c1','Announcement &amp; support','Home announcement and support hours',announceCard()+`<div class="card"><label style="margin-top:0">Support hours shown to users</label><input id="s_sh" value="${esc(sv('support_hours').text_value||'')}" placeholder="Daily 6 PM to 10 PM"><div style="margin-top:8px">${B('ok','Save','saveSH()')}</div></div>`)
+ +`<div class="card"><button class="o" onclick="sb.auth.signOut().then(()=>location.href='index.html')">Log out</button> <a class="b o" href="index.html">Back to app</a></div>`};
 const _d3=draw;
 draw=function(){const mine=tab==='draws';if(mine)tab='inbox';_d3();if(mine){tab='draws';$('app').innerHTML=drawsV()}
  const n=$('nav');if(n){if(mine)n.querySelectorAll('button.on').forEach(b=>b.classList.remove('on'));n.insertAdjacentHTML('beforeend',`<button class="${mine?'on':''}" onclick="tab='draws';draw();scrollTo(0,0)">Draw</button>`)}};
