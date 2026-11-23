@@ -10,7 +10,7 @@ const fmt=s=>Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
 const clock=d=>new Date(d).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 const day=d=>{const a=new Date(d).toDateString();return a===new Date().toDateString()?'Today':a===new Date(Date.now()-864e5).toDateString()?'Yesterday':new Date(d).toLocaleDateString([],{day:'numeric',month:'short'})};
 const wave=id=>Array.from({length:30},(_,i)=>`<i style="height:${5+((id*37+i*53)%19)}px"></i>`).join('');
-const TK=on=>`<svg class="chk" width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="${on?'#4fd1ff':'currentColor'}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${on?'Seen':'Delivered'}"><path d="M1 6.5l3.6 3.6L11 2"/><path d="M6 9.6l.8.5L15 2"/></svg>`;
+const TK=on=>`<svg class="chk" width="19" height="12" viewBox="0 0 19 12.5" fill="none" stroke="${on?'#4fd1ff':'currentColor'}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" role="img" aria-label="${on?'Seen':'Delivered'}"><path d="M1.2 6.8L4.6 10.2L11 2.6"/><path d="M9.2 9.6L9.8 10.2L16.4 2.6"/></svg>`;
 function bubble(m){const mine=m.sender===me;
  const body=m.deleted?'<i style="opacity:.7">🚫 This message was deleted</i>':m.kind==='voice'?`<div class="chv" data-vid="${m.id}"><button aria-label="Play voice message" onclick="event.stopPropagation();Chat.play(${m.id},this)">${PLAY}</button><div class="chbars">${wave(m.id)}</div><span class="chvd" style="font-size:12px;min-width:30px">${fmt(m.dur||0)}</span></div>`:E(m.body);
  const tick=mine&&!m.deleted?' '+TK(m.seen):'';
