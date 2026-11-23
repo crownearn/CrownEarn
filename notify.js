@@ -15,23 +15,29 @@ unblocked:{en:()=>['Account unblocked ✅','You can use the app again.'],ur:()=>
 announcement:{en:d=>['Announcement 📢',d.text],ur:d=>['اعلان 📢',d.text]}};
 const fmt=n=>{const t=TPL[n.kind];return t?t[lg()](n.data||{}):['Notification','']};
 const ready=()=>typeof P!=='undefined'&&P&&typeof sb!=='undefined';
+const keep=()=>((typeof D!=='undefined'&&D.cfg&&+D.cfg.notif_keep_days)||2)*864e5;
+const cutAt=()=>{let c=0;try{c=+localStorage.getItem('ntClear')||0}catch(e){}return Math.max(Date.now()-keep(),c)};
+function lazyClean(){try{const k='ntClean',l=+localStorage.getItem(k)||0;if(Date.now()-l>216e5){localStorage.setItem(k,String(Date.now()));sb.rpc('cleanup_old')}}catch(e){}}
 let N=[],raf=0;
 const unread=()=>{const t=new Date(P.notif_read_at||0);return N.filter(n=>new Date(n.created_at)>t).length};
 function badge(){const b=document.getElementById('bdgN');if(!b||!ready())return;const u=unread();b.style.display=u?'inline-block':'none';b.textContent=u}
-async function load(){if(!ready())return;const{data,error}=await sb.from('notifications').select('*').order('id',{ascending:false}).limit(40);if(error)return;N=data||[];badge()}
+async function load(){if(!ready())return;const{data,error}=await sb.from('notifications').select('*').order('id',{ascending:false}).limit(40);if(error)return;const c=cutAt();N=(data||[]).filter(n=>new Date(n.created_at)>c);badge();lazyClean()}
 function ensure(){if(!ready())return;const row=document.getElementById('lt'),b=document.getElementById('bell');
  if(b){if(row&&b.parentNode!==row){row.insertAdjacentElement('afterbegin',b);row.style.gap='6px';const nb=document.getElementById('nb');if(nb)nb.remove()}return}
  const html='<button id="bell" class="o" aria-label="Notifications" onclick="Notify.open()" style="padding:2px 10px;font-size:15px;border-bottom-width:2px">🔔<i class="bdg" id="bdgN" style="display:none;margin-left:2px"></i></button>';
  if(row){row.insertAdjacentHTML('afterbegin',html);row.style.gap='6px'}else{const a=document.getElementById('app');if(a)a.insertAdjacentHTML('afterbegin','<div id="nb" style="display:flex;justify-content:flex-end">'+html+'</div>')}badge()}
 const when=d=>new Date(d).toLocaleString([],{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 async function open(){if(!ready())return;await load();const t0=new Date(P.notif_read_at||0),ur=lg()==='ur';
+ const dy=Math.round(keep()/864e5),nt=N.length?`<div class="row" style="margin:6px 0"><span class="mute" style="font-size:12px;flex:1">${ur?dy+' دن سے پرانے نوٹیفکیشن خود ہٹ جاتے ہیں':'Older than '+dy+' day(s) are removed automatically'}</span><button class="o" style="padding:4px 12px" onclick="Notify.clear()">🗑 ${ur?'سب صاف کریں':'Clear all'}</button></div>`:'';
  const o=document.createElement('div');o.id='nl';o.className='ov';o.style.zIndex=40;o.onclick=e=>{if(e.target===o)o.remove()};
- o.innerHTML=`<div class="sh" style="padding:14px"><div class="row"><div class="hd" style="font-size:20px">🔔 ${ur?'نوٹیفکیشن':'Notifications'}</div><button class="o" style="padding:4px 12px" aria-label="Close" onclick="document.getElementById('nl').remove()">✕</button></div>${N.length?N.map(n=>{const[a,b]=fmt(n),nw=new Date(n.created_at)>t0;return `<div class="card" style="${nw?'border-color:var(--gold);border-width:2px':''}"><b>${esc(a)}</b><div>${esc(b)}</div><div class="mute" style="font-size:12px">${when(n.created_at)}</div></div>`}).join(''):`<div class="card mute">${ur?'ابھی کوئی نوٹیفکیشن نہیں۔':'No notifications yet.'}</div>`}</div>`;
+ o.innerHTML=`<div class="sh" style="padding:14px"><div class="row"><div class="hd" style="font-size:20px">🔔 ${ur?'نوٹیفکیشن':'Notifications'}</div><button class="o" style="padding:4px 12px" aria-label="Close" onclick="document.getElementById('nl').remove()">✕</button></div>${nt}${N.length?N.map(n=>{const[a,b]=fmt(n),nw=new Date(n.created_at)>t0;return `<div class="card" style="${nw?'border-color:var(--gold);border-width:2px':''}"><b>${esc(a)}</b><div>${esc(b)}</div><div class="mute" style="font-size:12px">${when(n.created_at)}</div></div>`}).join(''):`<div class="card mute">${ur?'ابھی کوئی نوٹیفکیشن نہیں۔':'No notifications yet.'}</div>`}</div>`;
  document.body.appendChild(o);
  if(unread()){await sb.rpc('mark_notifs_read');P.notif_read_at=new Date().toISOString();badge()}}
-window.Notify={open,load};
+async function clear(){try{localStorage.setItem('ntClear',String(Date.now()))}catch(e){}await sb.rpc('clear_my_notifs');N=[];if(typeof P!=='undefined'&&P)P.notif_read_at=new Date().toISOString();badge();const o=document.getElementById('nl');if(o)o.remove();if(typeof toast==='function')toast(lg()==='ur'?'نوٹیفکیشن صاف ہو گئے':'Notifications cleared')}
+window.Notify={open,load,clear};
 const iv=setInterval(()=>{if(!ready())return;clearInterval(iv);load();
  try{sb.channel('notif'+Date.now()).on('postgres_changes',{event:'INSERT',schema:'public',table:'notifications'},p=>{load();const[a]=fmt(p.new);if(typeof toast==='function')toast(a)}).subscribe()}catch(e){}},500);
 setInterval(()=>{if(ready()&&!document.hidden)load()},30000);
 if(window.MutationObserver)new MutationObserver(()=>{if(raf)return;raf=1;requestAnimationFrame(()=>{raf=0;ensure()})}).observe(document.body,{childList:true,subtree:true});
 })();
+document.head.appendChild(Object.assign(document.createElement('script'),{src:'tidy.js?v=1'}));
