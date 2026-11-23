@@ -1,12 +1,12 @@
-/* (also holds the Urdu text for "Try again") CrownEarn Lucky Draw v2: VIP card on the Home screen + draw page. Load after chat.js in index.html */
+/* (also holds the Urdu text for "Try again") CrownEarn Lucky Draw v3: card on the Home screen + draw page. Load after chat.js in index.html */
 (function(){
 if(window.LuckyDraw)return;
 const L=(e,u)=>{try{return localStorage.getItem('lang')==='ur'?u:e}catch(x){return e}};
 try{Object.assign(KIND,{draw_entry:'Lucky draw entry',draw_win:'Lucky draw prize',draw_refund:'Lucky draw refund',admin_adjust:'Admin adjustment'})}catch(e){}
 (function w(){if(!window.LangAdd)return setTimeout(w,60);LangAdd({
-'Lucky Draw':'لکی ڈرا','Try again':'دوبارہ کوشش کریں','VIP':'وی آئی پی','Open draws':'کھلے ڈرا','Past winners':'پچھلے فاتح','Your points:':'آپ کے پوائنٹس:',
+'Lucky Draw':'لکی ڈرا','Try again':'دوبارہ کوشش کریں','Open draws':'کھلے ڈرا','Past winners':'پچھلے فاتح','Your points:':'آپ کے پوائنٹس:',
 'Join':'شامل ہوں','Join now':'ابھی شامل ہوں','Joined ✔':'شامل ✔','Joined ✔ Good luck 🍀':'شامل ✔ نصیب اچھا ہو 🍀','View all draws':'سب ڈرا دیکھیں',
-'Entries closed':'انٹریاں بند','Winner coming soon':'فاتح کا اعلان جلد ہوگا','Free entry':'مفت انٹری','Next draw coming soon ✨':'اگلا ڈرا جلد آ رہا ہے ✨',
+'Entries closed':'انٹریاں بند','Winner coming soon':'فاتح کا اعلان جلد ہوگا','Next draw coming soon ✨':'اگلا ڈرا جلد آ رہا ہے ✨',
 'No draws right now. Check back soon!':'ابھی کوئی ڈرا نہیں۔ جلد دوبارہ دیکھیں!','No winners yet.':'ابھی کوئی فاتح نہیں۔',
 '🎉 Congratulations! You won a lucky draw.':'🎉 مبارک ہو! آپ لکی ڈرا جیت گئے۔','How it works':'یہ کیسے کام کرتا ہے',
 'Tap Join. When entries close, the winner is chosen and the prize points are added to their account.':'شامل ہوں دبائیں۔ انٹریاں بند ہونے پر فاتح چنا جاتا ہے اور انعام کے پوائنٹس اس کے اکاؤنٹ میں شامل ہو جاتے ہیں۔',
@@ -42,7 +42,7 @@ const isOpen=d=>d.status==='open'&&!(d.ends_at&&new Date(d.ends_at)<Date.now());
 const EM=['🍒','7️⃣','💎','🍀','👑','🎁'];
 const reel=(o,s)=>{const l=[...EM.slice(o),...EM.slice(0,o)];return `<div class="lkr"><div style="animation-duration:${s}s">${[...l,...l].map(e=>`<span>${e}</span>`).join('')}</div></div>`};
 function homeHtml(){const d=((B&&B.draws)||[]).filter(isOpen).sort((a,b)=>b.prize_points-a.prize_points)[0],w=((B&&B.winners)||[])[0];
- const body=d?`<div class="lkp">🏆 ${d.prize_points} pts</div><div class="lkn">≈ PKR ${rsF(d.prize_points)}</div><div class="lkd">${esc(d.title)}</div><div class="lkm2"><span>${d.entry_cost>0?'Entry: '+d.entry_cost+' pts':'Free entry'}</span> · <span>${d.entries} joined</span></div>`:'<div class="lkd" style="margin:14px 0 12px">Next draw coming soon ✨</div>';
+ const body=d?`<div class="lkp">🏆 ${d.prize_points} pts</div><div class="lkn">≈ PKR ${rsF(d.prize_points)}</div><div class="lkd">${esc(d.title)}</div><div class="lkm2"><span>${'Entry: '+d.entry_cost+' pts'}</span> · <span>${d.entries} joined</span></div>`:'<div class="lkd" style="margin:14px 0 12px">Next draw coming soon ✨</div>';
  const act=d?(d.joined?'<span class="lkj">Joined ✔ Good luck 🍀</span>':`<button class="lkb" onclick="LuckyDraw.join(${d.id})">Join now 🍀</button>`):'';
  return `<div class="lk" id="lkHome"><i class="lks" style="top:10px;left:14px">✨</i><i class="lks" style="top:16px;right:16px;animation-delay:.6s">💎</i><i class="lks" style="bottom:56px;left:10px;animation-delay:1.1s">⭐</i><i class="lks" style="bottom:70px;right:12px;animation-delay:1.6s">✨</i>
 <div class="lkt"><span>👑</span><b>Lucky Draw</b><span>👑</span></div><div class="lkreels">${reel(0,1.7)}${reel(2,2.2)}${reel(4,2.7)}</div>${body}
@@ -51,7 +51,7 @@ function inject(force){const app=document.getElementById('app');if(!app||!B)retu
  const ex=document.getElementById('lkHome');if(ex&&!force)return;if(ex)ex.remove();qa.insertAdjacentHTML('afterend',homeHtml())}
 function card(d){const open=isOpen(d);
  const act=d.joined?'<span class="tag">Joined ✔</span>':open?`<button onclick="LuckyDraw.join(${d.id})">Join</button>`:'<span class="tag">Entries closed</span>';
- return `<div class="card"><div class="gr"><span class="ic c1">🎁</span><div><b>${esc(d.title)}</b><div class="mute">${d.entry_cost>0?'Entry: '+d.entry_cost+' pts':'Free entry'}</div></div></div>
+ return `<div class="card"><div class="gr"><span class="ic c1">🎁</span><div><b>${esc(d.title)}</b><div class="mute">${'Entry: '+d.entry_cost+' pts'}</div></div></div>
 <div class="row" style="margin-top:10px"><span class="rw">🏆 ${d.prize_points} pts · PKR ${rsF(d.prize_points)}</span>${act}</div>
 <div class="mute" style="margin-top:6px">${d.entries} joined</div>${d.ends_at?`<div class="mute">Ends: ${when(d.ends_at)}</div>`:''}${!open&&d.joined?'<div class="mute">Winner coming soon</div>':''}</div>`}
 const wn=w=>`<div class="card row"><div><b>${esc(w.title)}</b><div class="mute">${esc(w.name)}${w.me?' (you)':''}</div></div><span class="rw">+${w.prize_points} pts</span></div>`;

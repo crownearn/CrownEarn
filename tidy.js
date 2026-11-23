@@ -8,9 +8,9 @@ document.head.insertAdjacentHTML('beforeend','<style id="tdcss">'+css+'</style>'
 'No withdrawals yet.':'ابھی کوئی ودڈرا نہیں۔','No deposits yet.':'ابھی کوئی ڈپازٹ نہیں۔','No receipts yet.':'ابھی کوئی رسید نہیں۔','No transactions yet.':'ابھی کوئی لین دین نہیں۔'},
 [[/^Show more \((\d+)\)$/,n=>`مزید دکھائیں (${n})`]])})();
 const dt=d=>new Date(d).toLocaleDateString([],{day:'numeric',month:'short'});
-const row=(w,x)=>`<div class="card row"><span>${w} <b>PKR ${x.amount_pkr}</b> <span class="mute">${esc(x.method)}</span><div class="mute" style="font-size:12px">${dt(x.created_at)}</div></span>${TAG[x.status]}</div>`;
-const rcpt=w=>`<div class="card"><b>✅ PKR ${w.amount_pkr} paid via ${esc(w.method)}</b><div class="mute">${w.note?'Transaction ID: '+esc(w.note):'Payment sent'} · ${new Date(w.created_at).toLocaleDateString()}</div></div>`;
-const led=x=>`<div class="card row"><span>${KIND[x.kind]||esc(x.kind)}<div class="mute">${esc(x.note||'')}</div></span><b style="color:${(x.points<0||x.pkr<0)?'#e0475b':'var(--mint)'}">${x.points?(x.points>0?'+':'')+x.points+' pts':(x.pkr>0?'+':'')+'PKR '+x.pkr}</b></div>`;
+const row=(w,x)=>`<div class="card row tx ${w==='Withdraw'?'out':'in'}"><span>${w} <b>PKR ${x.amount_pkr}</b> <span class="mute">${esc(x.method)}</span><div class="mute" style="font-size:12px">${dt(x.created_at)}</div></span>${TAG[x.status]}</div>`;
+const rcpt=w=>`<div class="card rcp"><b>✅ PKR ${w.amount_pkr} paid via ${esc(w.method)}</b><div class="mute">${w.note?'Transaction ID: '+esc(w.note):'Payment sent'} · ${new Date(w.created_at).toLocaleDateString()}</div></div>`;
+const led=x=>`<div class="card row tx ${(x.points<0||x.pkr<0)?'out':'in'}"><span>${KIND[x.kind]||esc(x.kind)}<div class="mute">${esc(x.note||'')}</div></span><b style="color:${(x.points<0||x.pkr<0)?'#e0475b':'var(--mint)'}">${x.points?(x.points>0?'+':'')+x.points+' pts':(x.pkr>0?'+':'')+'PKR '+x.pkr}</b></div>`;
 function panel(k,items,empty,on){
  return `<div id="tp_${k}" ${on?'':'hidden'}>${items.map((h,i)=>`<div class="${i>=FIRST?'tdh':''}">${h}</div>`).join('')||`<div class="card mute">${empty}</div>`}${items.length>FIRST?`<button class="o w tdm" onclick="Tidy.more('${k}',this)">Show more (${items.length-FIRST})</button>`:''}</div>`}
 function wallet(){

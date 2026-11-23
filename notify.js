@@ -40,4 +40,4 @@ const iv=setInterval(()=>{if(!ready())return;clearInterval(iv);load();
 setInterval(()=>{if(ready()&&!document.hidden)load()},30000);
 if(window.MutationObserver)new MutationObserver(()=>{if(raf)return;raf=1;requestAnimationFrame(()=>{raf=0;ensure()})}).observe(document.body,{childList:true,subtree:true});
 })();
-document.head.appendChild(Object.assign(document.createElement('script'),{src:'tidy.js?v=1'}));
+document.head.appendChild(Object.assign(document.createElement('script'),{src:'tidy.js?v=2'}));

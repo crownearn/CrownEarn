@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <title>CrownEarn Admin</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700&family=Sora:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@500;700&display=swap">
 <style>
 :root{--bg:#f4f1ff;--card:#fff;--ink:#241b4b;--mute:#6f6a8f;--pri:#6a4cf5;--pd:#4b33c4;--gold:#ffc83d;--gd:#d99a00;--line:#e6e0fb;--soft:#efeaff;--ok:#16b980;--od:#0a7d57;--bad:#e0475b;--bd:#a82638}
 @media(prefers-color-scheme:dark){:root{--bg:#14102b;--card:#1e1940;--ink:#f0edff;--mute:#a9a3cf;--line:#2e2860;--soft:#2a2358}}
@@ -59,9 +59,10 @@ nav button:nth-child(4)::before{content:"💬"}nav button:nth-child(5)::before{c
 nav button.on{background:var(--pri);color:#fff}
 .toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 18px;border-radius:14px;z-index:60;max-width:92%;text-align:center}
 </style>
+<link rel="stylesheet" href="theme.css?v=1">
 </head>
 
-<body>
+<body class="adm">
 <header class="ah"><img src="icon-192.png" alt="" width="46" height="46" onerror="this.style.display='none'"><div><div class="at">CrownEarn Admin 👑</div><div class="as">Control room</div></div></header>
 <main id="app"><div class="card">Loading…</div></main>
 <nav id="nav"></nav>
@@ -70,7 +71,7 @@ nav button.on{background:var(--pri);color:#fff}
 <script>window.supabase||document.write('<script src="https://unpkg.com/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"><\/script>')</script>
 <script src="admin.js?v=2"></script>
 <script src="admin2.js?v=1"></script>
-<script src="admin3.js?v=5"></script>
+<script src="admin3.js?v=6"></script>
 <script src="admin4.js?v=1"></script>
 </body>
 </html>
