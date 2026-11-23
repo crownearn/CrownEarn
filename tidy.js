@@ -39,6 +39,12 @@ const annTxt=c=>{const d=c.querySelector(':scope>div');return d?d.textContent.tr
 function annDismiss(app){const c=app.querySelector('#ann .card');if(!c||c.dataset.tdx)return;c.dataset.tdx='1';let d='';try{d=localStorage.getItem('annX')||''}catch(e){}
  if(d&&d===annTxt(c)){c.remove();return}c.style.position='relative';c.insertAdjacentHTML('afterbegin','<button class="tdx" aria-label="Hide" onclick="Tidy.hideAnn(this)">✕</button>')}
 function hideAnn(b){const c=b.closest('.card');try{localStorage.setItem('annX',annTxt(c))}catch(e){}c.remove()}
+/* Customer Service badge: count only NEW admin messages from the last 24 hours, and mark everything as read when the chat opens */
+window.chkUnread=async function(){if(typeof U==='undefined'||!U)return;
+ const{count}=await sb.from('messages').select('id',{count:'exact',head:true}).eq('user_id',U.id).eq('sender','admin').eq('seen',false).gte('created_at',new Date(Date.now()-864e5).toISOString());
+ const n=count||0;if(n!==unread){unread=n;navDraw()}};
+if(window.Chat&&!Chat.__tidy){const op=Chat.open;Chat.open=function(el,t,who,r){const x=op.apply(this,arguments);
+ if(who==='user'){try{Promise.resolve(sb.rpc('mark_read',{p_user:t})).then(()=>{if(window.onChatSeen)onChatSeen()})}catch(e){}}return x};Chat.__tidy=1}
 window.Tidy={show,more,moreTasks,hideAnn};
 let q=0;const app=document.getElementById('app');
 if(app&&window.MutationObserver)new MutationObserver(()=>{if(q)return;q=1;requestAnimationFrame(()=>{q=0;if(typeof tab==='undefined')return;if(tab==='tasks')tasksPager(app);if(tab==='home')annDismiss(app)})}).observe(app,{childList:true,subtree:true});
