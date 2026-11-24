@@ -88,3 +88,6 @@ html .lkj{background:rgba(74,222,128,.2);color:var(--mint);border:1px solid rgba
 /* loading screen */
 .ld0b i{background:linear-gradient(90deg,#5b8dff,#f3c969)}.ld0c img{border-color:rgba(243,201,105,.7);box-shadow:0 0 0 6px rgba(91,141,255,.15),0 14px 34px rgba(91,141,255,.45)}
 @media(prefers-reduced-motion:reduce){button{transition:none}}
+/* payment method buttons with logos */
+.ms button{display:flex;align-items:center;justify-content:center;gap:8px}.ms button .pl{flex:none}.ms button.on{background:rgba(91,141,255,.22)}
+.mas{filter:drop-shadow(0 6px 14px rgba(243,201,105,.35))}
