@@ -95,3 +95,14 @@ html .lkj{background:rgba(74,222,128,.2);color:var(--mint);border:1px solid rgba
 i.bdg{display:inline-block;font-size:0;line-height:0;width:11px;height:11px;min-width:0;padding:0;border-radius:50%;background:#ff3b4f;border:2px solid #0b1030;box-shadow:0 0 0 2px rgba(255,59,79,.28);vertical-align:middle;margin-left:4px}
 #fab i.bdg{top:-2px!important;right:-2px!important;margin:0;width:14px;height:14px}
 .ms .pl{border-radius:8px;flex:none;background:#fff}
+/* password eye + login proof */
+.pwb{position:relative}.pwb input{padding-inline-end:48px}
+#app .pwb button.eye{position:absolute;inset-inline-end:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;min-height:0;padding:0;margin:0;border:0;border-radius:12px;background:none;box-shadow:none;color:var(--mute);display:grid;place-items:center}
+#app .pwb button.eye:active{transform:translateY(-50%)}
+.proof{margin-top:14px;font-size:13px;color:var(--mint,#4ade80);background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.28);border-radius:14px;padding:9px 12px;text-align:center}
+.plist>div{display:flex;justify-content:space-between;align-items:center;padding:7px 2px;border-bottom:1px solid var(--line);font-size:14px;text-align:left}.plist>div:last-child{border-bottom:0}
+.paywith{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:12px;color:var(--mute);font-size:13px}.paywith .pl{width:28px;height:28px;border-radius:8px;background:#fff}
+/* help guide */
+.gd h3{font-size:16px;margin:14px 0 4px;text-align:start}.gd p{margin:4px 0;color:var(--mute);text-align:start;line-height:1.7}.gd ul{margin:4px 0;padding-inline-start:22px;color:var(--mute);text-align:start;line-height:1.7}
+.gdw{border:1px solid var(--line);border-radius:16px;padding:10px 14px;background:rgba(255,255,255,.04)}.gdw summary{cursor:pointer;font-weight:700;color:var(--cy)}.gdw[open] summary{margin-bottom:6px}
+textarea{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:14px;color:var(--ink);font:inherit;padding:11px}
