@@ -91,3 +91,6 @@ html .lkj{background:rgba(74,222,128,.2);color:var(--mint);border:1px solid rgba
 /* payment method buttons with logos */
 .ms button{display:flex;align-items:center;justify-content:center;gap:8px}.ms button .pl{flex:none}.ms button.on{background:rgba(91,141,255,.22)}
 .mas{filter:drop-shadow(0 6px 14px rgba(243,201,105,.35))}
+/* new-message badge = a small red dot (no number) */
+i.bdg{display:inline-block;font-size:0;line-height:0;width:11px;height:11px;min-width:0;padding:0;border-radius:50%;background:#ff3b4f;border:2px solid #0b1030;box-shadow:0 0 0 2px rgba(255,59,79,.28);vertical-align:middle;margin-left:4px}
+#fab i.bdg{top:-2px!important;right:-2px!important;margin:0;width:14px;height:14px}
